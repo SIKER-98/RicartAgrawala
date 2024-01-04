@@ -33,12 +33,17 @@ class RicartAgrawala:
             while self.reply_received < self.total_processes - 1:
                 pass
 
-            while min(self.queue, key=lambda x: x[1])[0] != self.my_id:
+            while self.id_to_cs_enter() != self.my_id:
                 pass
 
             print(f'QUEUE: {self.queue}')
 
             self.enter_cs()
+
+    def id_to_cs_enter(self):
+        min_clock = min(self.queue, key=lambda x: x[1])  # minimalny czas zegara
+        min_list = [item for item in self.queue if item[1] == min_clock]  # lista procesow w konflikcie
+        return min(min_list, key=lambda x: x[0])  # pierwszy wchodzi proces o nizszym ID
 
     def broadcast_request(self):
         self.lock.acquire()
